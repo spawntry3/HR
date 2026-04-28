@@ -1,0 +1,105 @@
+{% extends "analytics/base.html" %}
+{% load static %}
+
+{% block title %}Сотрудники · HR-аналитика{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>Сотрудники</h1>
+        <p class="hero__sub">Всего записей: <b>{{ total }}</b> · активных: <b>{{ active_count }}</b></p>
+    </div>
+</section>
+
+<form method="get" class="filters">
+    <input type="search" name="q" value="{{ filters.q }}" placeholder="Поиск по имени или email" class="filters__input">
+
+    <select name="department" class="filters__select">
+        <option value="">Все отделы</option>
+        {% for d in departments %}
+            <option value="{{ d.id }}"{% if filters.department == d.id|stringformat:"s" %} selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="grade" class="filters__select">
+        <option value="">Все грейды</option>
+        {% for g in grades %}
+            <option value="{{ g.id }}"{% if filters.grade == g.id|stringformat:"s" %} selected{% endif %}>{{ g }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="status" class="filters__select">
+        <option value="">Любой статус</option>
+        <option value="active"{% if filters.status == 'active' %} selected{% endif %}>Работают</option>
+        <option value="terminated"{% if filters.status == 'terminated' %} selected{% endif %}>Уволены</option>
+    </select>
+
+    <button type="submit" class="btn btn--primary">Применить</button>
+    <a href="{% url 'analytics:employees' %}" class="btn">Сбросить</a>
+</form>
+
+<article class="card card--flat">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ФИО</th>
+                <th>Email</th>
+                <th>Отдел</th>
+                <th>Грейд</th>
+                <th>Стек</th>
+                <th class="num">ЗП, ₸</th>
+                <th>Найм</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in page_obj %}
+            <tr>
+                <td><b>{{ e.full_name }}</b></td>
+                <td class="muted">{{ e.email }}</td>
+                <td>{{ e.department.name }}</td>
+                <td>{{ e.grade }}</td>
+                <td class="chips">
+                    {% for s in e.tech_stacks.all|slice:":3" %}
+                        <span class="chip">{{ s.name }}</span>
+                    {% endfor %}
+                    {% if e.tech_stacks.count > 3 %}<span class="chip chip--ghost">+{{ e.tech_stacks.count|add:"-3" }}</span>{% endif %}
+                </td>
+                <td class="num">{{ e.salary|floatformat:"0" }}</td>
+                <td>{{ e.hire_date|date:"d.m.Y" }}</td>
+                <td>
+                    {% if e.is_active %}
+                        <span class="badge badge--ok">Работает</span>
+                    {% else %}
+                        <span class="badge badge--bad">Уволен(а)</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" class="empty">Никто не найден по фильтрам</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</article>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="pager">
+    {% if page_obj.has_previous %}
+        <a href="?{% for k, v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" class="pager__btn">← Назад</a>
+    {% else %}
+        <span class="pager__btn pager__btn--disabled">← Назад</span>
+    {% endif %}
+
+    <span class="pager__info">
+        Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }} · всего {{ page_obj.paginator.count }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?{% for k, v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" class="pager__btn">Вперёд →</a>
+    {% else %}
+        <span class="pager__btn pager__btn--disabled">Вперёд →</span>
+    {% endif %}
+</nav>
+{% endif %}
+
+{% endblock %}

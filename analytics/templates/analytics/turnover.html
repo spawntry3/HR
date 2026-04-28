@@ -1,0 +1,68 @@
+{% extends "analytics/base.html" %}
+{% load static %}
+
+{% block title %}Текучесть кадров · HR-аналитика{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>Текучесть кадров</h1>
+        <p class="hero__sub">Динамика, причины и распределение увольнений</p>
+    </div>
+</section>
+
+<section class="kpi-grid">
+    <div class="kpi">
+        <div class="kpi__title">Активных</div>
+        <div class="kpi__value">{{ total_active }}</div>
+        <div class="kpi__sub">сотрудников сейчас</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__title">Уволенных всего</div>
+        <div class="kpi__value">{{ total_terminated }}</div>
+        <div class="kpi__sub">за всё время</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi__title">Средний стаж уволенных</div>
+        <div class="kpi__value">{{ avg_tenure_days }} дн.</div>
+        <div class="kpi__sub">от найма до увольнения</div>
+    </div>
+</section>
+
+<section class="grid">
+    <article class="card card--wide">
+        <header class="card__head">
+            <h2>Найм vs увольнения по месяцам</h2>
+            <span class="card__hint">12 месяцев</span>
+        </header>
+        <div class="chart-wrap"><canvas id="chartTurnover"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Причины увольнений</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartReasons"></canvas></div>
+    </article>
+
+    <article class="card card--wide">
+        <header class="card__head">
+            <h2>Активные / уволенные по отделам</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartDept"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>По грейдам</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartGrade"></canvas></div>
+    </article>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{{ chart_data|json_script:"chart-data" }}
+<script src="{% static 'analytics/js/turnover.js' %}"></script>
+{% endblock %}

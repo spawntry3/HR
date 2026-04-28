@@ -1,0 +1,159 @@
+{% extends "analytics/base.html" %}
+{% load humanize static %}
+
+{% block title %}Дашборд · HR-аналитика{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>Дашборд HR-метрик</h1>
+        <p class="hero__sub">Текучесть, зарплаты и время закрытия вакансий — в реальном времени.</p>
+    </div>
+    <div class="hero__actions">
+        <a href="/admin/analytics/employee/" class="btn">Сотрудники</a>
+        <a href="/admin/analytics/vacancy/" class="btn">Вакансии</a>
+    </div>
+</section>
+
+<section class="kpi-grid">
+    {% for kpi in kpis %}
+    <div class="kpi">
+        <div class="kpi__title">{{ kpi.title }}</div>
+        <div class="kpi__value">{{ kpi.value }}</div>
+        <div class="kpi__sub">{{ kpi.subtitle }}</div>
+    </div>
+    {% endfor %}
+</section>
+
+<section class="grid">
+    <article class="card card--wide">
+        <header class="card__head">
+            <h2>Текучесть кадров: найм vs увольнения (12 мес.)</h2>
+            <span class="card__hint">количество сотрудников по месяцам</span>
+        </header>
+        <div class="chart-wrap"><canvas id="chartTurnover"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Причины увольнений</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartReasons"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Зарплаты по грейдам</h2>
+            <span class="card__hint">мин / средняя / макс, ₸</span>
+        </header>
+        <div class="chart-wrap"><canvas id="chartGradeSalary"></canvas></div>
+    </article>
+
+    <article class="card card--wide">
+        <header class="card__head">
+            <h2>Средняя ЗП по технологиям / стекам</h2>
+            <span class="card__hint">топ-12 стеков</span>
+        </header>
+        <div class="chart-wrap"><canvas id="chartStackSalary"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Распределение зарплат</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartSalaryDist"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Время закрытия вакансий по отделам</h2>
+            <span class="card__hint">среднее, дней</span>
+        </header>
+        <div class="chart-wrap"><canvas id="chartTtcDept"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Время закрытия по грейдам</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartTtcGrade"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Численность по отделам</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartHeadcount"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Популярность технологий</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartStackPop"></canvas></div>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Статусы вакансий</h2>
+        </header>
+        <div class="chart-wrap"><canvas id="chartVacStatus"></canvas></div>
+    </article>
+</section>
+
+<section class="grid grid--two">
+    <article class="card">
+        <header class="card__head">
+            <h2>Последние увольнения</h2>
+        </header>
+        <table class="data-table">
+            <thead>
+                <tr><th>Сотрудник</th><th>Отдел</th><th>Грейд</th><th>Причина</th><th>Дата</th></tr>
+            </thead>
+            <tbody>
+                {% for e in recent_terminations %}
+                <tr>
+                    <td>{{ e.full_name }}</td>
+                    <td>{{ e.department.name }}</td>
+                    <td>{{ e.grade }}</td>
+                    <td>{{ e.get_termination_reason_display|default:"—" }}</td>
+                    <td>{{ e.termination_date|date:"d.m.Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty">Нет увольнений</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+
+    <article class="card">
+        <header class="card__head">
+            <h2>Открытые вакансии</h2>
+        </header>
+        <table class="data-table">
+            <thead>
+                <tr><th>Вакансия</th><th>Отдел</th><th>Грейд</th><th>Открыта</th><th>Дней</th></tr>
+            </thead>
+            <tbody>
+                {% for v in open_vacancies %}
+                <tr>
+                    <td>{{ v.title }}</td>
+                    <td>{{ v.department.name }}</td>
+                    <td>{{ v.grade }}</td>
+                    <td>{{ v.opened_at|date:"d.m.Y" }}</td>
+                    <td>{{ v.days_open }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty">Нет открытых вакансий</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{{ chart_data|json_script:"chart-data" }}
+<script src="{% static 'analytics/js/dashboard.js' %}"></script>
+{% endblock %}

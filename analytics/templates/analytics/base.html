@@ -1,0 +1,45 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}HR-аналитика IT-компании{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'analytics/css/dashboard.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="{% static 'analytics/js/chart-base.js' %}"></script>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a href="{% url 'analytics:dashboard' %}" class="brand">
+                <span class="brand__dot"></span>
+                <span class="brand__name">HR Analytics</span>
+            </a>
+            {% with active=request.resolver_match.url_name %}
+            <nav class="topnav">
+                <a href="{% url 'analytics:dashboard' %}" class="topnav__link{% if active == 'dashboard' %} is-active{% endif %}">Дашборд</a>
+                <a href="{% url 'analytics:employees' %}" class="topnav__link{% if active == 'employees' %} is-active{% endif %}">Сотрудники</a>
+                <a href="{% url 'analytics:vacancies' %}" class="topnav__link{% if active == 'vacancies' %} is-active{% endif %}">Вакансии</a>
+                <a href="{% url 'analytics:salaries' %}" class="topnav__link{% if active == 'salaries' %} is-active{% endif %}">Зарплаты</a>
+                <a href="{% url 'analytics:turnover' %}" class="topnav__link{% if active == 'turnover' %} is-active{% endif %}">Текучесть</a>
+                <a href="/admin/" class="topnav__link topnav__link--primary">Админ-панель</a>
+            </nav>
+            {% endwith %}
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <span>HR Analytics &middot; IT-компания</span>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
