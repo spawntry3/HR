@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!doctype html>
 <html lang="ru">
 <head>
@@ -8,9 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'analytics/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="{% static 'analytics/js/chart-base.js' %}"></script>
+    <script src="{% static 'js/chart-base.js' %}"></script>
 </head>
 <body>
     <header class="topbar">
@@ -43,3 +43,4 @@
     {% block scripts %}{% endblock %}
 </body>
 </html>
+

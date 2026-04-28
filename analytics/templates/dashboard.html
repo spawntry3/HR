@@ -1,4 +1,4 @@
-{% extends "analytics/base.html" %}
+﻿{% extends "base.html" %}
 {% load humanize static %}
 
 {% block title %}Дашборд · HR-аналитика{% endblock %}
@@ -155,5 +155,6 @@
 
 {% block scripts %}
 {{ chart_data|json_script:"chart-data" }}
-<script src="{% static 'analytics/js/dashboard.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
+

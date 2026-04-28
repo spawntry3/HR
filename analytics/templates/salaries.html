@@ -1,4 +1,4 @@
-{% extends "analytics/base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Зарплаты · HR-аналитика{% endblock %}
@@ -68,5 +68,6 @@
 
 {% block scripts %}
 {{ chart_data|json_script:"chart-data" }}
-<script src="{% static 'analytics/js/salaries.js' %}"></script>
+<script src="{% static 'js/salaries.js' %}"></script>
 {% endblock %}
+

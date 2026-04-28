@@ -1,4 +1,4 @@
-{% extends "analytics/base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Текучесть кадров · HR-аналитика{% endblock %}
@@ -64,5 +64,6 @@
 
 {% block scripts %}
 {{ chart_data|json_script:"chart-data" }}
-<script src="{% static 'analytics/js/turnover.js' %}"></script>
+<script src="{% static 'js/turnover.js' %}"></script>
 {% endblock %}
+

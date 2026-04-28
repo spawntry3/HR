@@ -1,4 +1,4 @@
-# HR-аналитика IT-компании
+﻿# HR-аналитика IT-компании
 
 Демо-проект на **Django 6** с админ-панелью и интерактивным дашбордом
 по ключевым HR-метрикам IT-компании:
@@ -67,10 +67,10 @@ HR-admin-panel/
     ├── urls.py
     ├── management/commands/
     │   └── seed_demo.py       # Генератор демо-данных
-    ├── templates/analytics/
+    ├── templates/
     │   ├── base.html
     │   └── dashboard.html
-    └── static/analytics/
+    └── static/
         ├── css/dashboard.css
         └── js/dashboard.js
 ```
@@ -109,3 +109,4 @@ python manage.py createsuperuser
 # Проверить корректность настроек
 python manage.py check
 ```
+

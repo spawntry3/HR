@@ -1,4 +1,4 @@
-"""Views для дашборда HR-аналитики."""
+﻿"""Views для дашборда HR-аналитики."""
 
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count, Q
@@ -40,7 +40,7 @@ def dashboard(request):
             .order_by("opened_at")[:8]
         ),
     }
-    return render(request, "analytics/dashboard.html", context)
+    return render(request, "dashboard.html", context)
 
 
 def employees_list(request):
@@ -68,7 +68,7 @@ def employees_list(request):
     paginator = Paginator(qs, 25)
     page = paginator.get_page(request.GET.get("page"))
 
-    return render(request, "analytics/employees.html", {
+    return render(request, "employees.html", {
         "page_obj": page,
         "departments": Department.objects.order_by("name"),
         "grades": Grade.objects.order_by("level"),
@@ -103,7 +103,7 @@ def vacancies_list(request):
     paginator = Paginator(qs, 25)
     page = paginator.get_page(request.GET.get("page"))
 
-    return render(request, "analytics/vacancies.html", {
+    return render(request, "vacancies.html", {
         "page_obj": page,
         "departments": Department.objects.order_by("name"),
         "grades": Grade.objects.order_by("level"),
@@ -137,7 +137,7 @@ def salaries_page(request):
     overall = Employee.objects.filter(status=Employee.STATUS_ACTIVE)
     avg_total = overall.aggregate(v=Avg("salary"))["v"]
 
-    return render(request, "analytics/salaries.html", {
+    return render(request, "salaries.html", {
         "chart_data": chart_data,
         "avg_total": avg_total,
         "total_active": overall.count(),
@@ -188,7 +188,7 @@ def turnover_page(request):
         ]
         avg_tenure_days = round(sum(days) / len(days)) if days else 0
 
-    return render(request, "analytics/turnover.html", {
+    return render(request, "turnover.html", {
         "chart_data": chart_data,
         "total_terminated": terminated_qs.count(),
         "total_active": Employee.objects.filter(status=Employee.STATUS_ACTIVE).count(),
@@ -199,3 +199,4 @@ def turnover_page(request):
 @require_GET
 def api_charts(request):
     return JsonResponse(_build_chart_data())
+
