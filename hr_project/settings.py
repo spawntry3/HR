@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,7 +69,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [str(BASE_DIR / "static")]
-STATIC_ROOT = str(BASE_DIR / "staticfiles")
+STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT") or str(BASE_DIR / "staticfiles")
 
 STORAGES = {
     "default": {
